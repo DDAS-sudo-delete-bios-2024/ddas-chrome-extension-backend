@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <script>
+        let socket = new WebSocket('ws://localhost:4000');
+
+        socket.onopen = function(event) {
+            console.log('WebSocket is open now.');
+        };
+
+        socket.onerror = function(event) {
+            console.error('WebSocket Error:', event);
+        };
+
+        socket.onclose = function(event) {
+            console.log('WebSocket is closed now.');
+        };
+    </script>
+</body>
+</html>
