@@ -1,46 +1,36 @@
-# Chatbot
+# Backend
 
-This chatbot is aimed to complement the **DDAS** system.  
-Picture this: You, as a student or researcher in an institute, want to download a dataset related to a classification task. You may not be certain which dataset to use or even if such a dataset exists. In such cases, having access to a database could be helpful as it would give you insight into what others are working on or have worked with.
+This is the code for our application server sitting in the local server (within the subnet). It is responsible for communicating with the frontend Chrome extension and provides a centralized solution. It also interacts with the database (present on the same machine) and saves and serves files to and from the repository (once again, on the same machine).
 
-However, there are challenges:
-1. The database could be vast, making it cumbersome to search through.
-2. Many datasets do not have self-explanatory names that reveal their purpose.
+It has three primary tasks: 
+1. **Check file existence**: The server checks whether the file details queried by the client exist in the database via the `/checkExistance` post endpoint. If the file does exist, the user will proceed to the third step.
+2. **Download file**: If the file does not exist, the client sends the details of the file (triggered by a button click in the frontend). Upon receiving those details through the `/downloadFile` endpoint, it downloads the file to the local machine, ensuring real-time updates of the download to the client using WebSockets. After the download is complete, the frontend will automatically start the download.
+3. **Access file**: A client can download the file from this local server using the GET method on the `/download/from/backend/:fileName` path.
 
-Hence, in such a scenario, an **LLM-based chatbot** could prove useful. The chatbot will be fed details of all existing datasets in the database. With this, it will possess knowledge of what is available and can also provide insights into the purpose and uses of each dataset, thanks to its broader training on the entire internet. The chatbot will guide the confused user with the necessary details efficiently.
+We also aim to use Apache as our web server on top of this application server.
 
 ---
 
 ## Tools Used
 
-- ![Gemini API](https://img.icons8.com/fluency/24/api.png) **Gemini API**
--  **Streamlit**
-- ![MongoDB](https://img.icons8.com/color/24/mongodb.png) **MongoDB**
-- ![Python](https://img.icons8.com/color/24/python.png) **Python**
-- ![Langchain](https://img.icons8.com/color/24/chain.png) **Langchain** *(in the future maybe)*
+- <img src="https://img.icons8.com/color/48/000000/nodejs.png" alt="Node.js" width="24"/> Node.js
+- <img src="https://img.icons8.com/color/48/000000/express.png" alt="Express" width="24"/> Express
+- <img src="https://img.icons8.com/color/48/000000/mongodb.png" alt="MongoDB" width="24"/> MongoDB
+- <img src="https://www.apache.org/icons/apache_pb.png" alt="Apache" width="24"/> Apache
+- <img src="https://img.icons8.com/color/48/000000/linux.png" alt="Linux" width="24"/> Linux
+-  Websockets
+
 
 ---
 
 ## How to Replicate
 
-1. **Install the requirements** from the `requirements.txt` using:
+1. **Install dependencies**: First, install the dependencies in the `package.json` file using:
    ```bash
-   pip install -r requirements.txt
-2. **Get your own Gemini API key** from the Gemini website and add it to the `.env` file.
-
-3. **Get the MongoDB URI** from MongoDB Atlas, create a database and a collection within it.  
-  Modify the following code in your project accordingly:
-
-  ```python
-  mongo_client = MongoClient(os.getenv("MONGODB_URI"))  
-  db = mongo_client['dupshield']  
-  collection = db['dataset-details']
-```
-
-4.Add both API keys (Gemini API and MongoDB URI) to your .env file.
-
-5. Run the application:
-```bash
-streamlit run chatbot.py
-```
-
+   npm install
+   ```
+2. Ensure you have a downloads folder where the files will be downloaded.
+3. Start the server using:
+   ```bash
+   npm run dev
+   ```
